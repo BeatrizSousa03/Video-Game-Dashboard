@@ -135,12 +135,21 @@ st.plotly_chart(fig_rating, use_container_width=True)
 
 
 # ==========================================
-# ROW 3: CONSOLE WARS (Regional Scope)
+# ROW 3: CONSOLE WARS (Regional Scope + Colorblind Safe)
 # ==========================================
 st.subheader(f"1. The Console Wars in {selected_region_label} (Market Evolution)")
 
 # Update Groupby to use selected_sales_col
 df_trend = df_regional_scope.groupby(['Year_of_Release', 'Maker'])[selected_sales_col].sum().reset_index()
+
+# --- COLORBLIND FRIENDLY PALETTE (Okabe-Ito Inspired) ---
+cb_palette = {
+    'Sony': '#0072B2',      # Strong Blue
+    'Nintendo': '#D55E00',  # Vermilion (Red/Orange)
+    'Microsoft': '#009E73', # Bluish Green (Teal)
+    'PC': '#333333',        # Dark Grey
+    'Other': '#999999'      # Light Grey
+}
 
 fig_trend = px.line(
     df_trend, 
@@ -148,7 +157,7 @@ fig_trend = px.line(
     y=selected_sales_col, # Dynamic Y-Axis
     color='Maker',
     title=f'Sales Volume by Manufacturer ({selected_region_label})',
-    color_discrete_map={'Sony': '#2980B9', 'Nintendo': '#C0392B', 'Microsoft': '#27AE60', 'PC': '#34495E', 'Other': '#BDC3C7'},
+    color_discrete_map=cb_palette, # <-- APPLIED HERE
     template="plotly_white"
 )
 fig_trend.update_layout(height=400, hovermode="x unified")
